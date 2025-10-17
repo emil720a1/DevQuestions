@@ -6,7 +6,13 @@ namespace DevQuestions.Domain.Questions;
 public class Question
 {
 
-    public Question(Guid id, string title, string text, Guid userId, Guid? screenshotId, IEnumerable<Guid> tags)
+    public Question(
+        Guid id, 
+        string title, 
+        string text, 
+        Guid userId, 
+        Guid? screenshotId, 
+        IEnumerable<Guid> tags)
     {
         Id = id;
         Title = title;
