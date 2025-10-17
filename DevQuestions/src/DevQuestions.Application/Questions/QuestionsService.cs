@@ -1,8 +1,12 @@
 using Contracts.Questions;
+using DevQuestions.Application.Extensions;
+using DevQuestions.Application.FulltextSearch;
+using DevQuestions.Application.Questions.Exceptions;
 using DevQuestions.Domain.Questions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Shared;
 
 namespace DevQuestions.Application.Questions;
 
@@ -14,8 +18,9 @@ public class QuestionsService : IQuestionsService
 
     public QuestionsService(
         IQuestionsRepository questionsRepository, 
-        ILogger<QuestionsService> logger, 
-        IValidator<CreateQuestionDto> validator)
+        IValidator<CreateQuestionDto> validator,
+        ILogger<QuestionsService> logger)
+        
     {
         _questionsRepository = questionsRepository;
         _validator = validator;
@@ -26,15 +31,21 @@ public class QuestionsService : IQuestionsService
         var validationResult = await _validator.ValidateAsync(questionDto, cancellationToken);
         if (!validationResult.IsValid)
         {
-            throw new ValidationException(validationResult.Errors);
+            throw new QuestionValidationException(validationResult.ToErrors());
         }
+        
+        var calculator = new QuestionCalculator();
+        
+        calculator.Calculate();
         
         int openUserQuestionsCount = await _questionsRepository
             .GetOpenUserQuestionsAsync(questionDto.UserId, cancellationToken);
 
+        var existedQuestion = await _questionsRepository.GetByIdAsync(Guid.Empty, cancellationToken);
+
         if (openUserQuestionsCount > 3)
         {
-            throw new Exception("Пользователь не может открыть больше 3 вопросов.");
+            throw new ToManyQuestionsException();
         } 
         
 
@@ -81,4 +92,13 @@ public class QuestionsService : IQuestionsService
     //     CancellationToken cancellationToken)
     // {
     // }
+}
+
+
+public class QuestionCalculator
+{
+    public void Calculate()
+    {
+        throw new NotImplementedException();
+    }
 }
