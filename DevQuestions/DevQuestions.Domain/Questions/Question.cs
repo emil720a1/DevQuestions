@@ -33,9 +33,9 @@ public class Question
     
     public Guid? ScreenshotId { get; set; }
 
-    public List<Answear> Answers { get; set; } = [];
+    public List<Answer> Answers { get; set; } = [];
     
-    public Answear? Solution { get; set; }
+    public Answer? Solution { get; set; }
 
     public List<Guid> Tags { get; set; } = [];
 
