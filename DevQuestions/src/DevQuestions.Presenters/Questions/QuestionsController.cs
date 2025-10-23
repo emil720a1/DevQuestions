@@ -1,7 +1,10 @@
 using Contracts.Questions;
+using Contracts.Questions.Respones;
 using DevQuestions.Application.Abstractions;
 using DevQuestions.Application.Questions;
-using DevQuestions.Application.Questions.CreateQuestion;
+using DevQuestions.Application.Questions.Features;
+using DevQuestions.Application.Questions.Features.CreateQuestion;
+using DevQuestions.Application.Questions.GetQuestionsWithFilters;
 using DevQuestions.Presenters.ResponseExtensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +18,7 @@ public class QuestionsController : ControllerBase
     
     [HttpPost]
     public async Task<IActionResult> Create(
-        [FromServices] ICommandHandler<Guid, CreateQuestionCommand> handler,
+        [FromServices] IHandler<Guid, CreateQuestionCommand> handler,
         [FromBody] CreateQuestionDto request, 
         CancellationToken cancellationToken)
     {
@@ -27,9 +30,18 @@ public class QuestionsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] GetQuestionsDto request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(
+        [FromServices] IHandler<QuestionResponse, GetQuestionsWithFiltersCommand> handler,
+        [FromQuery] GetQuestionsDto request,
+        CancellationToken cancellationToken)
     {
-        return Ok("Questions get");
+        
+        var command = new GetQuestionsWithFiltersCommand(request);
+        
+        var result = await handler.Handle(command, cancellationToken);
+        
+        
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
     [HttpGet("{questionId:guid}")]
@@ -65,7 +77,7 @@ public class QuestionsController : ControllerBase
     
     [HttpPost("{questionId:guid}/answers")]
     public async Task<IActionResult> AddAnswer(
-        [FromServices] ICommandHandler<Guid, AddAnswerCommand> handler,
+        [FromServices] IHandler<Guid, AddAnswerCommand> handler,
         [FromRoute] Guid questionId,
         [FromBody] AddAnswerDto request, 
         CancellationToken cancellationToken)

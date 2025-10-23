@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using DevQuestions.Application.Questions;
+using DevQuestions.Application.Questions.GetQuestionsWithFilters;
 using DevQuestions.Domain.Questions;
 using Microsoft.EntityFrameworkCore;
 using Shared;
@@ -52,6 +53,9 @@ public class QuestionsEfCoreRepository: IQuestionsRepository
         }
         return question;
     }
+
+    public Task<(IReadOnlyList<Question> Questions, long Count)> GetQuestionsWithFilterAsync(GetQuestionsWithFiltersCommand command, CancellationToken cancellationToken) => 
+        throw new NotImplementedException();
 
     public Task<int> GetOpenUserQuestionsAsync(Guid userId, CancellationToken cancellationToken)
     {

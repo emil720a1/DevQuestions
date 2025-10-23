@@ -2,6 +2,7 @@ using CSharpFunctionalExtensions;
 using Dapper;
 using DevQuestions.Application.Database;
 using DevQuestions.Application.Questions;
+using DevQuestions.Application.Questions.GetQuestionsWithFilters;
 using DevQuestions.Domain.Questions;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
@@ -56,6 +57,8 @@ public class QuestionsSqlRepository : IQuestionsRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<IReadOnlyList<Question>> GetQuestionsWithFilterAsync(GetQuestionsWithFiltersCommand command, CancellationToken cancellationToken) => throw new NotImplementedException();
 
     public Task<int> GetOpenUserQuestionsAsync(Guid userId, CancellationToken cancellationToken)
     {

@@ -17,7 +17,7 @@ public class QuestionsService : IQuestionsService
     private readonly IValidator<CreateQuestionDto> _createQuestionDtoValidator;
     private readonly IValidator<AddAnswerDto> _addAnswerDtoValidator;
     private readonly ITransactionManager _transactionManager;
-    private readonly IValidator<SelectSolutionDto> _selectSolutionDtoValidator;
+    // private readonly IValidator<SelectSolutionDto> _selectSolutionDtoValidator;
     private readonly IUsersCommunicationService _usersCommunicationService;
 
     public QuestionsService(
@@ -26,7 +26,7 @@ public class QuestionsService : IQuestionsService
         IValidator<AddAnswerDto> addAnswerDtoValidator,
         ITransactionManager transactionManager,
         IUsersCommunicationService usersCommunicationService,
-        IValidator<SelectSolutionDto> selectSolutionDtoValidator,
+        // IValidator<SelectSolutionDto> selectSolutionDtoValidator,
         ILogger<QuestionsService> logger)
     
         
@@ -36,7 +36,7 @@ public class QuestionsService : IQuestionsService
         _createQuestionDtoValidator = createQuestionDtoValidator;
         _transactionManager = transactionManager;
         _usersCommunicationService = usersCommunicationService;
-        _selectSolutionDtoValidator = selectSolutionDtoValidator;
+        // _selectSolutionDtoValidator = selectSolutionDtoValidator;
         _logger = logger;
     }
 
@@ -90,41 +90,41 @@ public class QuestionsService : IQuestionsService
     // {
     // }
     //
-    public async Task<Result<Guid, Failure>> SelectSolution(
-        Guid questionsId,
-        Guid answerId,
-        SelectSolutionDto selectSolutionDto,
-        CancellationToken cancellationToken)
-    {
-
-        var validationResult = await _selectSolutionDtoValidator.ValidateAsync(selectSolutionDto, cancellationToken);
-        if (!validationResult.IsValid)
-        {
-            return validationResult.ToErrors();
-        }
-
-
-        var transaction = await _transactionManager.BeginTransactionAsync(cancellationToken);
-
-        (_, bool isFailure, Question? question, Failure? error) =
-            await _questionsRepository.GetByIdAsync(questionsId, cancellationToken);
-        if (isFailure)
-        {
-            return error;
-        }
-        
-       var selectedAnswer =  question.Solution = question.Answers.FirstOrDefault(a => a.Id == answerId);
-        question.Status = QuestionStatus.RESOLVED;
-
-        await _questionsRepository.SaveAsync(question, cancellationToken);
-
-        transaction.Commit();
-        
-        _logger.LogInformation("Answer added with id {AnswerId} to question {questionId}", answerId, questionsId);
-        
-        
-        return answerId;
-    }
+    // public async Task<Result<Guid, Failure>> SelectSolution(
+    //     Guid questionsId,
+    //     Guid answerId,
+    //     SelectSolutionDto selectSolutionDto,
+    //     CancellationToken cancellationToken)
+    // {
+    //
+    //     var validationResult = await _selectSolutionDtoValidator.ValidateAsync(selectSolutionDto, cancellationToken);
+    //     if (!validationResult.IsValid)
+    //     {
+    //         return validationResult.ToErrors();
+    //     }
+    //
+    //
+    //     var transaction = await _transactionManager.BeginTransactionAsync(cancellationToken);
+    //
+    //     (_, bool isFailure, Question? question, Failure? error) =
+    //         await _questionsRepository.GetByIdAsync(questionsId, cancellationToken);
+    //     if (isFailure)
+    //     {
+    //         return error;
+    //     }
+    //     
+    //    var selectedAnswer =  question.Solution = question.Answers.FirstOrDefault(a => a.Id == answerId);
+    //     question.Status = QuestionStatus.RESOLVED;
+    //
+    //     await _questionsRepository.SaveAsync(question, cancellationToken);
+    //
+    //     transaction.Commit();
+    //     
+    //     _logger.LogInformation("Answer added with id {AnswerId} to question {questionId}", answerId, questionsId);
+    //     
+    //     
+    //     return answerId;
+    // }
 
     public async Task<Result<Guid, Failure>> AddAnswer(
          Guid questionId,

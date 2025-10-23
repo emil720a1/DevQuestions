@@ -7,9 +7,9 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Shared;
 
-namespace DevQuestions.Application.Questions.CreateQuestion;
+namespace DevQuestions.Application.Questions.Features.CreateQuestion;
 
-public class CreateQuestionHandler : ICommandHandler<Guid, CreateQuestionCommand>
+public class CreateQuestionHandler : IHandler<Guid, CreateQuestionCommand>
 {
     private readonly ILogger<CreateQuestionHandler> _logger;
     private readonly IQuestionsRepository _questionsRepository;
