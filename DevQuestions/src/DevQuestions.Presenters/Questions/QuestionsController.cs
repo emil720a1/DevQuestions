@@ -1,10 +1,11 @@
 using Contracts.Questions;
+using Contracts.Questions.Dtos;
 using Contracts.Questions.Respones;
 using DevQuestions.Application.Abstractions;
 using DevQuestions.Application.Questions;
 using DevQuestions.Application.Questions.Features;
-using DevQuestions.Application.Questions.Features.CreateQuestion;
-using DevQuestions.Application.Questions.GetQuestionsWithFilters;
+using DevQuestions.Application.Questions.Features.CreateQuestionCommand;
+using DevQuestions.Application.Questions.GetQuestionsWithFiltersQuery;
 using DevQuestions.Presenters.ResponseExtensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,30 +19,30 @@ public class QuestionsController : ControllerBase
     
     [HttpPost]
     public async Task<IActionResult> Create(
-        [FromServices] IHandler<Guid, CreateQuestionCommand> handler,
+        [FromServices] ICommandHandler<Guid, CreateQuestionCommand> commandHandler,
         [FromBody] CreateQuestionDto request, 
         CancellationToken cancellationToken)
     {
         
         var command = new CreateQuestionCommand(request);
         
-        var result = await handler.Handle(command, cancellationToken);
+        var result = await commandHandler.Handle(command, cancellationToken);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [HttpGet]
     public async Task<IActionResult> Get(
-        [FromServices] IHandler<QuestionResponse, GetQuestionsWithFiltersCommand> handler,
+        [FromServices] IQueryHandler<QuestionResponse, GetQuestionsWithFiltersQuery> commandHandler,
         [FromQuery] GetQuestionsDto request,
         CancellationToken cancellationToken)
     {
         
-        var command = new GetQuestionsWithFiltersCommand(request);
+        var query = new GetQuestionsWithFiltersQuery(request);
         
-        var result = await handler.Handle(command, cancellationToken);
+        var result = await commandHandler.Handle(query, cancellationToken);
         
         
-        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+        return Ok(result); 
     }
     
     [HttpGet("{questionId:guid}")]
@@ -77,7 +78,7 @@ public class QuestionsController : ControllerBase
     
     [HttpPost("{questionId:guid}/answers")]
     public async Task<IActionResult> AddAnswer(
-        [FromServices] IHandler<Guid, AddAnswerCommand> handler,
+        [FromServices] ICommandHandler<Guid, AddAnswerCommand> commandHandler,
         [FromRoute] Guid questionId,
         [FromBody] AddAnswerDto request, 
         CancellationToken cancellationToken)
@@ -85,7 +86,7 @@ public class QuestionsController : ControllerBase
         
         var command = new AddAnswerCommand(questionId , request);
         
-        var result = await handler.Handle(command, cancellationToken);
+        var result = await commandHandler.Handle(command, cancellationToken);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
         
     }

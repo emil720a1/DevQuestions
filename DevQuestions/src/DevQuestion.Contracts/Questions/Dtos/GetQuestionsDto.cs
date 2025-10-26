@@ -1,3 +1,3 @@
-namespace Contracts.Questions;
+namespace Contracts.Questions.Dtos;
 
-public record GetQuestionsDto(string Search, Guid[] TagIds, int PageSize);
+public record GetQuestionsDto(string Search, Guid[] TagIds, int Page, int PageSize);

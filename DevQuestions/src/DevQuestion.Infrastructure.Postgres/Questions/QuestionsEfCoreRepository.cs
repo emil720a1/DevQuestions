@@ -1,27 +1,27 @@
 using CSharpFunctionalExtensions;
 using DevQuestions.Application.Questions;
-using DevQuestions.Application.Questions.GetQuestionsWithFilters;
+using DevQuestions.Application.Questions.GetQuestionsWithFiltersQuery;
 using DevQuestions.Domain.Questions;
 using Microsoft.EntityFrameworkCore;
 using Shared;
 
-namespace DevQuestion.Infrastructure.Postgres.Repositories;
+namespace DevQuestion.Infrastructure.Postgres.Questions;
 
 public class QuestionsEfCoreRepository: IQuestionsRepository
 {
-    private readonly QuestionsDbContext _dbContext;
+    private readonly QuestionsReadDbContext _readDbContext;
 
-    public QuestionsEfCoreRepository(QuestionsDbContext dbContext)
+    public QuestionsEfCoreRepository(QuestionsReadDbContext readDbContext)
     {
-        _dbContext = dbContext;
+        _readDbContext = readDbContext;
     }
     
 
     public async Task<Guid> AddAsync(Question question, CancellationToken cancellationToken)
     {
-        await _dbContext.Questions.AddAsync(question, cancellationToken);
+        await _readDbContext.Questions.AddAsync(question, cancellationToken);
         
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _readDbContext.SaveChangesAsync(cancellationToken);
         
         return question.Id;
         
@@ -29,8 +29,8 @@ public class QuestionsEfCoreRepository: IQuestionsRepository
 
     public async Task<Guid> SaveAsync(Question question, CancellationToken cancellationToken)
     {
-        _dbContext.Questions.Attach(question);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        _readDbContext.Questions.Attach(question);
+        await _readDbContext.SaveChangesAsync(cancellationToken);
         
         return question.Id;
     }
@@ -42,7 +42,7 @@ public class QuestionsEfCoreRepository: IQuestionsRepository
 
     public async Task<Result<Question, Failure>> GetByIdAsync(Guid questionId, CancellationToken cancellationToken)
     {
-        var question = await _dbContext.Questions
+        var question = await _readDbContext.Questions
             .Include(q => q.Answers)
             .Include(q => q.Solution)
             .FirstOrDefaultAsync(g => g.Id == questionId, cancellationToken);
@@ -54,7 +54,7 @@ public class QuestionsEfCoreRepository: IQuestionsRepository
         return question;
     }
 
-    public Task<(IReadOnlyList<Question> Questions, long Count)> GetQuestionsWithFilterAsync(GetQuestionsWithFiltersCommand command, CancellationToken cancellationToken) => 
+    public Task<(IReadOnlyList<Question> Questions, long Count)> GetQuestionsWithFilterAsync(GetQuestionsWithFiltersQuery query, CancellationToken cancellationToken) => 
         throw new NotImplementedException();
 
     public Task<int> GetOpenUserQuestionsAsync(Guid userId, CancellationToken cancellationToken)

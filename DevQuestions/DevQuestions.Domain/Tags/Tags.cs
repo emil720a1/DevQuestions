@@ -1,6 +1,6 @@
 namespace DevQuestions.Domain.Tags;
 
-public class Tags
+public class Tag
 {
     public Guid Id { get; set; }
     

@@ -1,4 +1,5 @@
 ﻿using Contracts.Questions;
+using Contracts.Questions.Dtos;
 using CSharpFunctionalExtensions;
 using DevQuestions.Application.Abstractions;
 using DevQuestions.Application.Extensions;
@@ -9,17 +10,17 @@ using Shared;
 
 namespace DevQuestions.Application.Questions.Features;
 
-public class AddAnswerHandler : IHandler<Guid, AddAnswerCommand>
+public class AddAnswerCommandHandler : ICommandHandler<Guid, AddAnswerCommand>
 {
 
     private readonly IQuestionsRepository _questionsRepository;
-    private readonly ILogger<AddAnswerHandler> _logger;
+    private readonly ILogger<AddAnswerCommandHandler> _logger;
     private readonly IValidator<AddAnswerDto> _validator;
     // private readonly ITransactionManager _transactionManager; 
     // private readonly IUsersCommunicationService _usersCommunicationService;
-    public AddAnswerHandler(
+    public AddAnswerCommandHandler(
         IQuestionsRepository questionsRepository, 
-        ILogger<AddAnswerHandler> logger,
+        ILogger<AddAnswerCommandHandler> logger,
         IValidator<AddAnswerDto> validator)
         // ITransactionManager transactionManager
         // IUsersCommunicationService usersCommunicationService)

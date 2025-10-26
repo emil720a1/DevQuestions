@@ -1,4 +1,4 @@
-﻿namespace DevQuestions.Application.Questions.Features.SelectSolution;
+﻿namespace DevQuestions.Application.Questions.Features.SelectSolutionCommand;
 //
 // public class SelectSolutionHandler : ICommandHandler<Guid, SelectSolutionCommand>
 // {
