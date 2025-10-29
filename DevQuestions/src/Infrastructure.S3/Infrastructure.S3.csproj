@@ -7,11 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Core\Shared\Shared.csproj" />
       <ProjectReference Include="..\DevQuestions.Application\DevQuestions.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+      <PackageReference Include="AWSSDK.S3" Version="4.0.7.9" />
     </ItemGroup>
 
 </Project>
