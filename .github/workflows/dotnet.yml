@@ -22,10 +22,10 @@ jobs:
         dotnet-version: 9.0.x
         
     - name: Restore dependencies
-      run: dotnet restore DevQuestions/DevQuestions/DevQuestions.sln
+      run: dotnet restore ./DevQuestions/DevQuestions.sln
 
     - name: Build
-      run: dotnet build DevQuestions/DevQuestions/DevQuestions.sln --no-restore
+      run: dotnet build ./DevQuestions/DevQuestions.sln --no-restore
       
     - name: Test
-      run: dotnet test DevQuestions/DevQuestions/DevQuestions.sln --no-build --verbosity normal
+      run: dotnet test ./DevQuestions/DevQuestions.sln --no-build --verbosity normal
