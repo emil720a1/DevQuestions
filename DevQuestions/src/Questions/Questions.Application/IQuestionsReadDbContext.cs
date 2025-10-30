@@ -1,6 +1,8 @@
+using Questions.Domain;
+
 namespace Questions.Application;
 
 public interface IQuestionsReadDbContext
 {
-    IQueryable<Questions.Domain.Question> ReadQuestions { get;}
+    IQueryable<Question> ReadQuestions { get;}
 }

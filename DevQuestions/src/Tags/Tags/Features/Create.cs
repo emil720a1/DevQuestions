@@ -10,7 +10,6 @@ namespace Tags.Features;
 
 public sealed class Create 
 {
-    
     public sealed class Endpoint : IEndpoint
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
