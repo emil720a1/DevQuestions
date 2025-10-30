@@ -24,8 +24,8 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore .\DevQuestions\DevQuestions.sln
 
-      
     - name: Build
-      run: dotnet build .\DevQuestions\DevQuestions.sln--no-restore  --no-restore
+      run: dotnet build .\DevQuestions\DevQuestions.sln --no-restore
+      
     - name: Test
       run: dotnet test .\DevQuestions\DevQuestions.sln --no-build --verbosity normal
